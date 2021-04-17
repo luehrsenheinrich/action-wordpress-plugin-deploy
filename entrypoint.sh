@@ -20,14 +20,6 @@ if [[ -z "$SVN_PASSWORD" ]]; then
 	exit 1
 fi
 
-# Set variables
-GENERATE_ZIP=false
-
-# Set options based on user input
-if [ -z "$1" ]; then
-  GENERATE_ZIP=$1;
-fi
-
 # Allow some ENV variables to be customized
 if [[ -z "$SLUG" ]]; then
 	SLUG=${GITHUB_REPOSITORY#*/}
@@ -46,6 +38,11 @@ if [[ -z "$ASSETS_DIR" ]]; then
 fi
 echo "ℹ︎ ASSETS_DIR is $ASSETS_DIR"
 
+if [[ -z "$PLUGIN_DIR" ]]; then
+	PLUGIN_DIR="."
+fi
+echo "ℹ︎ PLUGIN_DIR is $PLUGIN_DIR"
+
 SVN_URL="https://plugins.svn.wordpress.org/${SLUG}/"
 SVN_DIR="/github/svn-${SLUG}"
 
@@ -62,18 +59,18 @@ if [[ -e "$GITHUB_WORKSPACE/.distignore" ]]; then
 	echo "ℹ︎ Using .distignore"
 	# Copy from current branch to /trunk, excluding dotorg assets
 	# The --delete flag will delete anything in destination that no longer exists in source
-	rsync -rc --exclude-from="$GITHUB_WORKSPACE/.distignore" "$GITHUB_WORKSPACE/" trunk/ --delete --delete-excluded
+	rsync -rc --exclude-from="$GITHUB_WORKSPACE/.distignore" "$GITHUB_WORKSPACE/$PLUGIN_DIR/" trunk/ --delete --delete-excluded
 else
 	echo "ℹ︎ Using .gitattributes"
 
-	cd "$GITHUB_WORKSPACE"
+	cd "$GITHUB_WORKSPACE/$PLUGIN_DIR/"
 
 	# "Export" a cleaned copy to a temp directory
 	TMP_DIR="/github/archivetmp"
 	mkdir "$TMP_DIR"
 
-	git config --global user.email "10upbot+github@10up.com"
-	git config --global user.name "10upbot on GitHub"
+	git config --global user.email "lhbot+github@luehrsen-heinrich.de"
+	git config --global user.name "lhbot on GitHub"
 
 	# If there's no .gitattributes file, write a default one into place
 	if [[ ! -e "$GITHUB_WORKSPACE/.gitattributes" ]]; then
@@ -130,12 +127,5 @@ svn status
 
 echo "➤ Committing files..."
 svn commit -m "Update to version $VERSION from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
-
-if ! $GENERATE_ZIP; then
-  echo "Generating zip file..."
-  cd "$SVN_DIR/trunk" || exit
-  zip -r "${GITHUB_WORKSPACE}/${SLUG}.zip" .
-  echo "✓ Zip file generated!"
-fi
 
 echo "✓ Plugin deployed!"
