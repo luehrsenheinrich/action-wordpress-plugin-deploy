@@ -17,9 +17,7 @@ This Action commits the contents of your Git tag to the WordPress.org plugin rep
 * `PLUGIN_DIR` - defaults to the root folder of the GitHub repository.
 
 ## Excluding files from deployment
-If there are files or directories to be excluded from deployment, such as tests or editor config files, they can be specified in either a `.distignore` file or a `.gitattributes` file using the `export-ignore` directive. If a `.distignore` file is present, it will be used; if not, the Action will look for a `.gitattributes` file and barring that, will write a basic temporary `.gitattributes` into place before proceeding so that no Git/GitHub-specific files are included.
-
-`.distignore` is useful particularly when there are built files that are in `.gitignore`, and is a file that is used in [WP-CLI](https://wp-cli.org/). For modern plugin setups with a build step and no built files committed to the repository, this is the way forward. `.gitattributes` is useful for plugins that don't run a build step as a part of the Actions workflow and also allows for GitHub's generated ZIP files to contain the same contents as what is committed to WordPress.org. If you would like to attach a ZIP file with the proper contents that decompresses to a folder name without version number as WordPress generally expects, you can add steps to your workflow that generate the ZIP and attach it to the GitHub release (concrete examples to come).
+If there are files or directories to be excluded from deployment, such as tests or editor config files, they can be specified in a `.distignore` file.
 
 ### Sample baseline files
 
@@ -35,18 +33,6 @@ If there are files or directories to be excluded from deployment, such as tests 
 
 .distignore
 .gitignore
-```
-
-#### `.gitattributes`
-
-```gitattributes
-# Directories
-/.wordpress-org export-ignore
-/.github export-ignore
-
-# Files
-/.gitattributes export-ignore
-/.gitignore export-ignore
 ```
 
 
@@ -78,42 +64,6 @@ jobs:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
         SLUG: my-super-cool-plugin # optional, remove if GitHub repo name matches SVN slug, including capitalization
-```
-
-### Deploy on publishing a new release and attach a ZIP file to the release
-```yml
-name: Deploy to WordPress.org
-on:
-  release:
-    types: [published]
-jobs:
-  tag:
-    name: New release
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Build
-      run: |
-        npm install
-        npm run build
-    - name: WordPress Plugin Deploy
-      id: deploy
-      uses: luehrsenheinrich/action-wordpress-plugin-deploy@stable
-      with:
-        generate-zip: true
-      env:
-        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-    - name: Upload release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ${{github.workspace}}/${{ github.event.repository.name }}.zip
-        asset_name: ${{ github.event.repository.name }}.zip
-        asset_content_type: application/zip
 ```
 
 ## Contributing
