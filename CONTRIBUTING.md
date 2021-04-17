@@ -10,11 +10,11 @@ Contributing isn't just writing code - it's anything that improves the project. 
 
 ### Reporting bugs
 
-If you're running into an issue with the action, please take a look through [existing issues](https://github.com/10up/action-wordpress-plugin-deploy/issues) and [open a new one](https://github.com/10up/action-wordpress-plugin-deploy/issues/new) if needed. If you're able, include a link to the log output from the failed run.
+If you're running into an issue with the action, please take a look through [existing issues](https://github.com/luehrsenheinrich/action-wordpress-plugin-deploy/issues) and [open a new one](https://github.com/luehrsenheinrich/action-wordpress-plugin-deploy/issues/new) if needed. If you're able, include a link to the log output from the failed run.
 
 ### Suggesting enhancements
 
-New features and enhancements are also managed via [issues](https://github.com/10up/action-wordpress-plugin-deploy/issues).
+New features and enhancements are also managed via [issues](https://github.com/luehrsenheinrich/action-wordpress-plugin-deploy/issues).
 
 ### Pull requests
 
@@ -28,6 +28,6 @@ This repository currently uses the `develop` branch to reflect active work and `
 
 ## Release instructions
 
-1. [Create a new release](https://github.com/10up/action-wordpress-plugin-deploy/releases/new)
+1. [Create a new release](https://github.com/luehrsenheinrich/action-wordpress-plugin-deploy/releases/new)
 2. Ensure it appears in the GitHub Marketplace correctly
 3. Celebrate shipping!

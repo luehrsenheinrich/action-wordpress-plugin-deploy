@@ -72,7 +72,7 @@ jobs:
         npm install
         npm run build
     - name: WordPress Plugin Deploy
-      uses: 10up/action-wordpress-plugin-deploy@stable
+      uses: luehrsenheinrich/action-wordpress-plugin-deploy@stable
       env:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
@@ -98,7 +98,7 @@ jobs:
         npm run build
     - name: WordPress Plugin Deploy
       id: deploy
-      uses: 10up/action-wordpress-plugin-deploy@stable
+      uses: luehrsenheinrich/action-wordpress-plugin-deploy@stable
       with:
         generate-zip: true
       env:
