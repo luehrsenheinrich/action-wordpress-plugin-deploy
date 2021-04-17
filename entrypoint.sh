@@ -63,7 +63,7 @@ if [[ -e "$GITHUB_WORKSPACE/.distignore" ]]; then
 else
 	echo "ℹ︎ Using .gitattributes"
 
-	cd "$GITHUB_WORKSPACE/$PLUGIN_DIR/"
+	cd "$GITHUB_WORKSPACE/"
 
 	# "Export" a cleaned copy to a temp directory
 	TMP_DIR="/github/archivetmp"
@@ -94,7 +94,7 @@ else
 
 	# Copy from clean copy to /trunk, excluding dotorg assets
 	# The --delete flag will delete anything in destination that no longer exists in source
-	rsync -rc "$TMP_DIR/" trunk/ --delete --delete-excluded
+	rsync -rc "$TMP_DIR/$PLUGIN_DIR/" trunk/ --delete --delete-excluded
 fi
 
 # Copy dotorg assets to /assets
